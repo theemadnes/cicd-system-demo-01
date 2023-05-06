@@ -66,5 +66,14 @@ gcloud container fleet mesh describe --project ${PROJECT}
 
 ```
 
+### enable github -> cloud build integration
 
+```
+# enable API for Cloud Build
+# enable API for Artifact Registry
+# enable API for Secret Manager
+# created AR repo `github`
+# image ID format us-central1-docker.pkg.dev/cicd-system-demo-01/github/whereami-go:$COMMIT_SHA
+# turned on vuln scanning
+```
 
