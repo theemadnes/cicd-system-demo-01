@@ -18,6 +18,9 @@ export PROJECT_NUMBER=$(gcloud projects list --filter=${PROJECT} --format="value
 # set up VPC
 gcloud compute networks create ${VPC} --project=${PROJECT} --subnet-mode=auto --mtu=1460 --bgp-routing-mode=regional && gcloud compute firewall-rules create default-allow-custom --project=${PROJECT} --network=projects/${PROJECT}/global/networks/${VPC} --description=Allows\ connection\ from\ any\ source\ to\ any\ instance\ on\ the\ network\ using\ custom\ protocols. --direction=INGRESS --priority=65534 --source-ranges=10.128.0.0/9 --action=ALLOW --rules=all && gcloud compute firewall-rules create default-allow-ssh --project=${PROJECT} --network=projects/${PROJECT}/global/networks/${VPC} --description=Allows\ TCP\ connections\ from\ any\ source\ to\ any\ instance\ on\ the\ network\ using\ port\ 22. --direction=INGRESS --priority=65534 --source-ranges=0.0.0.0/0 --action=ALLOW --rules=tcp:22
 
+# not sure but might need egress
+gcloud compute --project=cicd-system-demo-01 firewall-rules create allow-all-egress --direction=EGRESS --priority=1000 --network=default --action=ALLOW --rules=all --destination-ranges=0.0.0.0/0
+# also added artifact registry reader role to compute SA # this did it 
 
 # set up clusters
 gcloud container --project ${PROJECT} clusters create-auto ${CLUSTER_DEV} --region ${REGION} --release-channel "regular" --network "projects/${PROJECT}/global/networks/${VPC}" --subnetwork "projects/${PROJECT}/regions/${REGION}/subnetworks/${VPC}" --cluster-ipv4-cidr "/17" --services-ipv4-cidr "/22"
